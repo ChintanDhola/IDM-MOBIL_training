@@ -5,12 +5,17 @@ This project analyzes naturalistic highway traffic data to classify driving beha
 The workflow follows a structured pipeline including data preprocessing, feature engineering, exploratory analysis, modeling, evaluation, and visualization.
 
 ## Project Structure
-├── Prjt1.py # Data preprocessing, feature engineering & evaluation metrics
-├── Prjt2.py # Deep learning modeling (classification & regression)
-├── README.md # Project documentation
-├── feature_matrix.csv
-└── data/ # Raw highD CSV files
 
+├── data/                  # Raw highD CSV files (not uploaded due to size)
+├── models/                # Saved trained Keras models for behavior classification
+│   ├── aggr_model.h5      # Model for aggressive driving style
+│   ├── def_model.h5       # Model for defensive driving style
+│   └── norm_model.h5      # Model for normal driving style
+├── Prjt1.py               # Data preprocessing, feature engineering & evaluation metrics
+├── Prjt2.py               # Deep learning modeling (classification & regression)
+├── IDM +MOBIL.ipynb       # Parameter tuning, risk score & deterministic traffic simulation 
+├── feature_matrix.csv     # Aggregated vehicle-level features (e.g., df_behave.csv)
+└── README.md              # Project documentation
 
 
 ## Dataset
@@ -72,11 +77,22 @@ The workflow follows a structured pipeline including data preprocessing, feature
 - Task: TTC prediction  
 - Loss function: Mean Squared Error (MSE)  
 
-### 5. Model Training (Prjt2.py)
+### 5. Model Training & Optimization
+Part A: Deep Learning Training (Prjt2.py / Prjt2.ipynb)
 
-- Train-test split: 80/20  
-- Multi-epoch training  
-- Monitoring: training accuracy, validation accuracy, training loss, validation loss  
+Behavior-Specific Models: The neural networks are trained separately for distinct driving styles, resulting in dedicated Keras models saved in the /models directory (aggr_model.h5, def_model.h5, norm_model.h5).
+
+Training Process: 80/20 train-test split with multi-epoch training.
+
+Monitoring: Tracking training accuracy, validation accuracy, training loss (Categorical Cross-Entropy for behavior), and validation loss (MSE for TTC regression).
+
+Part B: IDM + MOBIL Parameter Tuning (IDM +MOBIL.ipynb)
+
+Behavioral Calibration: Adjusting the deterministic Intelligent Driver Model (IDM) parameters (target speed v0, time gap T, acceleration a, and comfortable deceleration b) dynamically based on the predicted driving style (Defensive, Normal, Aggressive).
+
+MOBIL Safety Thresholding: Establishing the safe braking limit (b_safe = 10.0 m/s²) for lane-changing and cut-in scenarios based on naturalistic HighD trajectories.
+
+Risk Score Aggregation: Calculating a hybrid Risk Score utilizing Inverse TTC, Distance Headway (DHW), and relative lateral velocity to define strict, physics-based safety boundaries (e.g., critical TTC < 1.5s) for crash prevention.
 
 ### 6. Model Evaluation (Prjt1.py)
 
