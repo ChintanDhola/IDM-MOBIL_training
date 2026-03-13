@@ -6,6 +6,7 @@ The workflow follows a structured pipeline including data preprocessing, feature
 
 ## Project Structure
 
+```text
 ├── data/                  # Raw highD CSV files (not uploaded due to size)
 ├── models/                # Saved trained Keras models for behavior classification
 │   ├── aggr_model.h5      # Model for aggressive driving style
